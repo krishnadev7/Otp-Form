@@ -14,10 +14,25 @@ function App() {
 
   useEffect(() => {
     inputRef.current[0].focus();
+
+    inputRef.current[0].addEventListener("paste",pasteText);
+
+    return () => inputRef.current[0].removeEventListener("paste",pasteText);
+
   },[])
 
+  function pasteText(e) {
+      const pastedText = e.clipboardData.getData("text");
+      const fieldValue = {}
+      Object.keys(otp).forEach((key,index) => {
+          fieldValue[key] = pastedText[index];
+      })
+      setOtp(fieldValue)
+      inputRef.current[5].focus();
+  }
+
   const handleChange = (e, index) => {
-    const { name, value } = event.target;
+    const { name, value } = e.target;
     if(/[a-z]/gi.test(value)) return;
     setOtp(prev => ({
       ...prev,
